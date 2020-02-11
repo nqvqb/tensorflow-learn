@@ -19,3 +19,13 @@ cifar2png cifar10 cifar-10
 pip3 install scipy
 pip3 install matplotlib
 ```
+
+
+##### train
+```sh
+tmux new -s train1
+
+python3 1-test_resnet18.py
+
+tmux attach-session -t train1
+```
