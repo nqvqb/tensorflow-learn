@@ -3,7 +3,7 @@
 
 ##### Dependencies
 ```sh
-
+virtualenv --system-site-packages -p python3 ~/venv/tf21
 source ~/venv/tf21/bin/activate
 
 pip3 install pydot
