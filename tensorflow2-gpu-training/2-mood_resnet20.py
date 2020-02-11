@@ -10,12 +10,14 @@ import pathlib
 import math
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
+
+home_dir = os.getenv("HOME")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
 
 
 NUM_GPUS = 1
 BS_PER_GPU = 128
-NUM_EPOCHS = 500
+NUM_EPOCHS = 20
 
 HEIGHT = 32
 WIDTH = 32
@@ -78,10 +80,10 @@ data_gen_args = dict(rescale=1./255,
 train_datagen = ImageDataGenerator(**data_gen_args)
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow_from_directory('/home/' + os.environ.get('USERNAME') + '/datasets/siw/train', target_size=(32, 32), batch_size=BATCH_SIZE, shuffle=True, class_mode='binary')
-validation_generator = test_datagen.flow_from_directory('/home/' + os.environ.get('USERNAME') + '/datasets/siw/test', target_size=(32, 32), batch_size=BATCH_SIZE, class_mode='binary')
+train_generator = train_datagen.flow_from_directory(home_dir + '/datasets/siw/train', target_size=(32, 32), batch_size=BATCH_SIZE, shuffle=True, class_mode='binary')
+validation_generator = test_datagen.flow_from_directory(home_dir + '/datasets/siw/val', target_size=(32, 32), batch_size=BATCH_SIZE, class_mode='binary')
 
-data_dir = '/home/' + os.environ.get('USERNAME') + '/datasets/cifar-10/train'
+data_dir = home_dir + '/datasets/cifar-10/train'
 data_dir = pathlib.Path(data_dir)
 print('data_dir', data_dir)
 image_count = len(list(data_dir.glob('*/*.jpg')))
@@ -111,18 +113,19 @@ print('label_batch', label_batch.shape)
 show_batch(image_batch, label_batch)
 
 mood_resnet20.summary()
-# keras.utils.plot_model(mood_resnet20, 'resnet20.png', show_shapes=True)
 
+keras.utils.plot_model(mood_resnet20, 'resnet20.png', show_shapes=True)
 
-# mood_resnet20.fit(train_generator, epochs=NUM_EPOCHS, validation_data=validation_generator, validation_freq=1, callbacks=[tensorboard_callback, lr_schedule_callback])
+#mood_resnet20.fit(train_generator, epochs=NUM_EPOCHS, validation_data=validation_generator, validation_freq=1, callbacks=[tensorboard_callback, lr_schedule_callback])
+mood_resnet20.fit(train_generator, epochs=NUM_EPOCHS, validation_data=validation_generator, validation_freq=1, callbacks=[lr_schedule_callback])
 
-# mood_resnet20.evaluate(validation_generator)
+mood_resnet20.evaluate(validation_generator)
 
-# mood_resnet20.save('mood_resnet20.h5')
+mood_resnet20.save('mood_resnet20.h5')
 
-# new_model = keras.models.load_model('mood_resnet20.h5')
+new_model = keras.models.load_model('mood_resnet20.h5')
 
-# new_model.evaluate(validation_generator)
+new_model.evaluate(validation_generator)
 
 
 
