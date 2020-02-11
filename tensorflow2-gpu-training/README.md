@@ -6,14 +6,16 @@
 virtualenv --system-site-packages -p python3 ~/venv/tf21
 source ~/venv/tf21/bin/activate
 
+pip3 install tensorflow-gpu==2.1
+
 pip3 install pydot
 sudo apt-get install graphviz
 
-pip install cifar2png
+pip3 install cifar2png
 cd ~/datasets
 # download cifar-10 dataaset and convert
 cifar2png cifar10 cifar-10
 
-pip install scipy
-pip install matplotlib
+pip3 install scipy
+pip3 install matplotlib
 ```
