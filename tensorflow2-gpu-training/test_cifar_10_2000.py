@@ -19,7 +19,7 @@ dataset_name = 'cifar-10'
 
 NUM_GPUS = 1
 BS_PER_GPU = 128
-NUM_EPOCHS = 50
+NUM_EPOCHS = 300
 
 HEIGHT = 32
 WIDTH = 32
