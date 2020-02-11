@@ -120,7 +120,7 @@ data_gen_args = dict(rescale=1./255, rotation_range=30, width_shift_range=0.1, h
                      channel_shift_range=0.1, fill_mode='nearest',horizontal_flip=True)
 train_datagen = ImageDataGenerator(**data_gen_args)
 test_datagen = ImageDataGenerator(rescale=1./255)
-
+print("os.environ.get('USERNAME')", os.environ.get('USERNAME'))
 train_generator = train_datagen.flow_from_directory('/home/' + os.environ.get('USERNAME') + '/datasets/cifar-10/train', target_size=(32, 32), batch_size=BATCH_SIZE, shuffle=True, class_mode='binary')
 validation_generator = test_datagen.flow_from_directory('/home/' + os.environ.get('USERNAME') + '/datasets/cifar-10/test', target_size=(32, 32), batch_size=BATCH_SIZE, class_mode='binary')
 
