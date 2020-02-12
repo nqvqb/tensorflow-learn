@@ -16,7 +16,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 home_dir = os.getenv("HOME")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
 
-dataset_name = 'cifar-10_200'
+dataset_name = 'cifar-10'
 NUM_CLASSES = 10
 HEIGHT = 32
 WIDTH = 32
@@ -24,13 +24,13 @@ NUM_CHANNELS = 3
 input_shape = (HEIGHT, WIDTH, NUM_CHANNELS)
 img_input = tf.keras.layers.Input(shape=input_shape)
 # training meta
-NUM_EPOCHS = 3
+NUM_EPOCHS = 200
 FREQ_SAVE_CHECKPOINT = 1
 BASE_LEARNING_RATE = 0.1
 LR_SCHEDULE = [(0.1, 2), (0.01, 50), (0.001, 300)]
 # machine meta
 NUM_GPUS = 1
-BS_PER_GPU = 64
+BS_PER_GPU = 128
 # batch size, TODO: gpu memory
 BATCH_SIZE = BS_PER_GPU * NUM_GPUS
 
