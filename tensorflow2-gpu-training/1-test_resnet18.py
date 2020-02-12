@@ -152,7 +152,7 @@ print('label_batch', label_batch.shape)
 
 show_batch(image_batch, label_batch)
 
-opt = keras.optimizers.SGD(learning_rate=0.1, momentum=0.9)
+opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.9)
 resnet18.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['sparse_categorical_accuracy'])
 # deprecated
 # resnet18.fit_generator(train_generator, epochs=NUM_EPOCHES, validation_data=validation_generator, validation_freq=1)
