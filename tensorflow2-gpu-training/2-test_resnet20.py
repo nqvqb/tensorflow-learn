@@ -57,7 +57,7 @@ else:
     with mirrored_strategy.scope():
       model = resnet.resnet20(img_input=img_input, classes=NUM_CLASSES)
 
-model.compile(optimizer=keras.optimizers.Adam(learning_rate=1e-3),
+model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001),
               loss='sparse_categorical_crossentropy',
               metrics=['sparse_categorical_accuracy'])
 
@@ -126,7 +126,7 @@ path_checkpoint_best = home_dir + '/models/'+dataset_name+'/train/'+st+'/best'
 path_checkpoint_period = home_dir + '/models/'+dataset_name+'/train/'+st+'/{epoch:04d}'
 
 # save best checkpoint
-cp_callback_best = ModelCheckpoint(path_checkpoint_best, monitor='loss', verbose=1, save_best_only=True)
+cp_callback_best = ModelCheckpoint(path_checkpoint_best, monitor='val_loss', verbose=1, save_best_only=True)
 # save checkpoints periodically
 cp_callback_period = ModelCheckpoint(path_checkpoint_period, verbose=1, period=FREQ_SAVE_CHECKPOINT)
 
@@ -138,9 +138,9 @@ model.fit(train_generator,
           )
 
 
-model.save(dataset_name + '.h5')
-new_model = keras.models.load_model(dataset_name + '.h5')
-new_model.evaluate(validation_generator)
+#model.save(dataset_name + '.h5')
+#new_model = keras.models.load_model(dataset_name + '.h5')
+#snew_model.evaluate(validation_generator)
 
 
 
