@@ -1,6 +1,8 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
+import os
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
 
 import tensorflow as tf
 from tensorflow import keras
@@ -8,13 +10,16 @@ from tensorflow.keras import layers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import numpy as np
-import os
 import pathlib
 import math
-home_dir = os.getenv("HOME")
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
+import datetime
 
-dataset_name = 'cifar-10'
+from tensorflow.keras.callbacks import ModelCheckpoint
+
+home_dir = os.getenv("HOME")
+
+
+dataset_name = 'cifar-10_200'
 
 class FixedImageDataGenerator(ImageDataGenerator):
     def standardize(self, x):
@@ -111,7 +116,7 @@ resnet18.summary()
 keras.utils.plot_model(resnet18, 'resnet18.png', show_shapes=True)
 
 NUM_TRAINING_SAMPLE = 50000
-NUM_EPOCHES = 100
+NUM_EPOCHES = 3
 BATCH_SIZE = 64
 STEPS_PER_EPOCH = int(NUM_TRAINING_SAMPLE/BATCH_SIZE)
 print('STEPS_PER_EPOCH', STEPS_PER_EPOCH)
@@ -164,13 +169,22 @@ opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.9)
 resnet18.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=['sparse_categorical_accuracy'])
 # deprecated
 # resnet18.fit_generator(train_generator, epochs=NUM_EPOCHES, validation_data=validation_generator, validation_freq=1)
-resnet18.fit(train_generator, epochs=NUM_EPOCHES, validation_data=validation_generator, validation_freq=1)
 
-resnet18.evaluate(validation_generator)
+# get current utc timestamp
+st = datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S%f')[:-3]
+path_checkpoint_best = home_dir + '/models/'+dataset_name+'/train/'+st+'/best'
+path_checkpoint_period = home_dir + '/models/'+dataset_name+'/train/'+st+'/{epoch:04d}'
 
-resnet18.save(dataset_name + '.h5')
+# save best checkpoint
+cp_callback_best = ModelCheckpoint(path_checkpoint_best, monitor='val_loss', verbose=1, save_best_only=True)
+# save checkpoints periodically
+cp_callback_period = ModelCheckpoint(path_checkpoint_period, monitor='val_loss', verbose=1, period=20)
 
-new_model = keras.models.load_model(dataset_name + '.h5')
+resnet18.fit(train_generator, epochs=NUM_EPOCHES, validation_data=validation_generator, validation_freq=1, callbacks=[cp_callback_best, cp_callback_period])
 
-new_model.evaluate(validation_generator)
+# as saving checkpoints, the following code is not necessary
+# resnet18.evaluate(validation_generator)
+# resnet18.save(dataset_name + '.h5')
+# new_model = keras.models.load_model(dataset_name + '.h5')
+# new_model.evaluate(validation_generator)
 
