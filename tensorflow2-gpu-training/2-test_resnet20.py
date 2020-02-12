@@ -15,6 +15,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 
 home_dir = os.getenv("HOME")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 
 dataset_name = 'cifar-10'
 NUM_CLASSES = 10
