@@ -57,7 +57,11 @@ else:
     with mirrored_strategy.scope():
       model = resnet.resnet20(img_input=img_input, classes=NUM_CLASSES)
 
-model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001),
+# model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001),
+#               loss='sparse_categorical_crossentropy',
+#               metrics=['sparse_categorical_accuracy'])
+# use SGD
+model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.1, momentum=0.9),
               loss='sparse_categorical_crossentropy',
               metrics=['sparse_categorical_accuracy'])
 
