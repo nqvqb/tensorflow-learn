@@ -15,7 +15,7 @@ import os
 home_dir = os.getenv("HOME")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
 
-dataset_name = 'cifar-10'
+dataset_name = 'cifar-10_4000'
 
 NUM_GPUS = 1
 BS_PER_GPU = 128
