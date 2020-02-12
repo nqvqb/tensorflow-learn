@@ -19,7 +19,7 @@ dataset_name = 'cifar-10'
 
 NUM_GPUS = 1
 BS_PER_GPU = 128
-NUM_EPOCHS = 50
+NUM_EPOCHS = 200
 
 HEIGHT = 32
 WIDTH = 32
@@ -29,7 +29,7 @@ NUM_TRAIN_SAMPLES = 50000
 BATCH_SIZE = BS_PER_GPU * NUM_GPUS
 
 BASE_LEARNING_RATE = 0.1
-LR_SCHEDULE = [(0.1, 150), (0.01, 300), (0.01, 450)]
+LR_SCHEDULE = [(0.1, 20), (0.001, 300)]
 
 
 def schedule(epoch):
@@ -69,7 +69,7 @@ lr_schedule_callback = LearningRateScheduler(schedule)
 
 
 data_gen_args = dict(rescale=1./255,
-                     rotation_range=30,
+                     rotation_range=15,
                      width_shift_range=0.1,
                      height_shift_range=0.1,
                      zoom_range=0.2,

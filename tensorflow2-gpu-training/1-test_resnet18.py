@@ -14,6 +14,8 @@ import math
 home_dir = os.getenv("HOME")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
 
+dataset_name = 'cifar-10'
+
 class FixedImageDataGenerator(ImageDataGenerator):
     def standardize(self, x):
         if self.featurewise_center:
@@ -109,23 +111,29 @@ resnet18.summary()
 keras.utils.plot_model(resnet18, 'resnet18.png', show_shapes=True)
 
 NUM_TRAINING_SAMPLE = 50000
-NUM_EPOCHES = 50
+NUM_EPOCHES = 100
 BATCH_SIZE = 64
 STEPS_PER_EPOCH = int(NUM_TRAINING_SAMPLE/BATCH_SIZE)
 print('STEPS_PER_EPOCH', STEPS_PER_EPOCH)
 
 # TODO: visualize more validation
 
-data_gen_args = dict(rescale=1./255, rotation_range=30, width_shift_range=0.1, height_shift_range=0.1, zoom_range=0.2,
-                     channel_shift_range=0.1, fill_mode='nearest',horizontal_flip=True)
+data_gen_args = dict(rescale=1./255,
+                     rotation_range=15,
+                     width_shift_range=0.1,
+                     height_shift_range=0.1,
+                     zoom_range=0.2,
+                     channel_shift_range=0.1,
+                     fill_mode='nearest',
+                     horizontal_flip=True)
 train_datagen = ImageDataGenerator(**data_gen_args)
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow_from_directory(home_dir + '/datasets/cifar-10/train', target_size=(32, 32), batch_size=BATCH_SIZE, shuffle=True, class_mode='binary')
-validation_generator = test_datagen.flow_from_directory(home_dir + '/datasets/cifar-10/test', target_size=(32, 32), batch_size=BATCH_SIZE, class_mode='binary')
+train_generator = train_datagen.flow_from_directory(home_dir + '/datasets/'+dataset_name+'/train', target_size=(32, 32), batch_size=BATCH_SIZE, shuffle=True, class_mode='binary')
+validation_generator = test_datagen.flow_from_directory(home_dir + '/datasets/'+dataset_name+'/test', target_size=(32, 32), batch_size=BATCH_SIZE, class_mode='binary')
 
 
-data_dir = home_dir + '/datasets/cifar-10/train'
+data_dir = home_dir + '/datasets/'+dataset_name+'/train'
 data_dir = pathlib.Path(data_dir)
 print('data_dir', data_dir)
 image_count = len(list(data_dir.glob('*/*.jpg')))
@@ -157,3 +165,12 @@ resnet18.compile(optimizer=opt, loss='sparse_categorical_crossentropy', metrics=
 # deprecated
 # resnet18.fit_generator(train_generator, epochs=NUM_EPOCHES, validation_data=validation_generator, validation_freq=1)
 resnet18.fit(train_generator, epochs=NUM_EPOCHES, validation_data=validation_generator, validation_freq=1)
+
+resnet18.evaluate(validation_generator)
+
+resnet18.save(dataset_name + '.h5')
+
+new_model = keras.models.load_model(dataset_name + '.h5')
+
+new_model.evaluate(validation_generator)
+
