@@ -31,7 +31,7 @@ BASE_LEARNING_RATE = 0.1
 LR_SCHEDULE = [(0.1, 2), (0.01, 50), (0.001, 300)]
 # machine meta
 NUM_GPUS = 1
-BS_PER_GPU = 512
+BS_PER_GPU = 128
 # batch size, TODO: gpu memory
 BATCH_SIZE = BS_PER_GPU * NUM_GPUS
 
