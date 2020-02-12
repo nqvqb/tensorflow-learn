@@ -26,7 +26,7 @@ input_shape = (HEIGHT, WIDTH, NUM_CHANNELS)
 img_input = tf.keras.layers.Input(shape=input_shape)
 # training meta
 NUM_EPOCHS = 200
-FREQ_SAVE_CHECKPOINT = 1
+FREQ_SAVE_CHECKPOINT = 20
 BASE_LEARNING_RATE = 0.1
 LR_SCHEDULE = [(0.1, 2), (0.01, 50), (0.001, 300)]
 # machine meta
